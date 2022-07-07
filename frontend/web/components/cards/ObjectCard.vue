@@ -1,7 +1,7 @@
 <template>
   <v-card
     v-if="orientation == 'horizontal'"
-    class="object__card--horizontal rounded-lg elevation-1"
+    class="object-card object-card_orientation_horizontal rounded-lg elevation-1"
   >
     <v-container>
       <v-row>
@@ -57,7 +57,7 @@
           </v-card-text>
           <v-spacer></v-spacer>
           <v-card-actions
-            class="object__card--horizontal__card-actions pb-0 mt-auto d-flex w-100"
+            class="object-card__card-actions object-card__card-actions_orientation_horizontal pb-0 mt-auto d-flex w-100"
           >
             <v-flex class="d-inline-flex align-center">
               <v-rating
@@ -84,8 +84,8 @@
   <v-card
     v-else-if="orientation == 'vertical'"
     style="width: 350px"
-    class="object__card--vertical mx-auto"
-    :class="{ 'object__card--map': map }"
+    class="object-card object-card_orientation_vertical mx-auto"
+    :class="{ 'object-card_is-map': map }"
   >
     <v-container>
       <v-img
@@ -93,7 +93,8 @@
         contain
         lazy-src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
         src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
-        :class="{ 'object__card__image--map': map }"
+        class="'object-card__image"
+        :class="{ 'object-card__image_is-map': map }"
       >
       </v-img>
       <v-card-subtitle
@@ -238,13 +239,13 @@ export default {
 </script>
 
 <style>
-.object__card--map .v-image .v-image__image--preload {
+.object-card_is-map .v-image .v-image__image--preload {
   filter: none !important;
 }
-.object__card__image--map .v-image .v-image__image--preload {
+.object-card__image_is-map .v-image .v-image__image--preload {
   filter: none !important;
 }
-.object__card--horizontal__card-actions {
+.object-card__card-actions_orientation_horizontal {
   width: 100%;
 }
 </style>
