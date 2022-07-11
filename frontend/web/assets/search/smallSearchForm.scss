@@ -1,0 +1,60 @@
+.small-search-form {
+  height: 48px;
+  &__date {
+    max-width: 100px !important;
+    @media (max-width: $bp-md) {
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    .v-input {
+      &__slot {
+        padding: 0 !important;
+        @media (max-width: $bp-md) {
+          font-weight: 400;
+          font-size: 14px;
+          line-height: 20px;
+        }
+      }
+    }
+  }
+  &__visitors {
+    max-width: 200px !important;
+    @media (max-width: $bp-md) {
+      max-width: 100px !important;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    .v-input {
+      &__slot {
+        padding: 0 !important;
+        @media (max-width: $bp-md) {
+          font-weight: 400;
+          font-size: 14px;
+          line-height: 20px;
+        }
+      }
+    }
+  }
+  &__city {
+    max-width: 250px !important;
+
+    @media (max-width: $bp-md) {
+      max-width: 100px !important;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    .v-input {
+      &__slot {
+        padding: 0 !important;
+        @media (max-width: $bp-md) {
+          font-weight: 400;
+          font-size: 14px;
+          line-height: 20px;
+        }
+      }
+    }
+  }
+}

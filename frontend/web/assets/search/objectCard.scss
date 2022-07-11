@@ -1,0 +1,38 @@
+.v-pagination {
+  &__navigation {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  &__item {
+    background: transparent !important;
+    box-shadow: none !important;
+
+    &--active {
+      background: $primary !important;
+    }
+  }
+}
+
+.object-card {
+  &__title {
+    @include textEllipsis(2);
+  }
+  &__params {
+    font-weight: 400 !important;
+    font-size: 10px !important;
+    line-height: 16px !important;
+  }
+  &__circumstances {
+    @media (max-width: $bp-sm) {
+      display: none !important;
+    }
+  }
+}
+
+.list-item {
+  min-height: 10px !important;
+  color: #00aca2 !important;
+  &__title {
+    font-size: 10px !important;
+  }
+}

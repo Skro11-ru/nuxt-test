@@ -1,39 +1,72 @@
 <template>
   <v-app-bar
-    dark
+    elevation="0"
     app
+    height="90"
     class="align-baseline justify-sm-center align-content-center"
   >
-    <v-btn icon color="red" class="ml-5">
-      <v-icon x-large>{{ logo }}</v-icon>
+    <v-btn icon class="ml-5 burger-btn">
+      <v-img
+        max-width="64"
+        max-height="49"
+        lazy-src="/Burger.svg"
+        src="/Burger.svg"
+        class="rounded-lg rounded-r-0"
+        width="100%"
+      ></v-img>
     </v-btn>
-    <v-toolbar-title v-text="title" />
+    <v-btn icon class="ml-5 logo">
+      <v-img
+        max-width="64"
+        max-height="49"
+        lazy-src="/logo.svg"
+        src="/logo.svg"
+        class="rounded-lg rounded-r-0"
+        width="100%"
+      ></v-img>
+    </v-btn>
+
     <v-spacer />
-    <small-search-form
-      v-if="search"
-      class="align-content-center mt-6"
-      short
-    ></small-search-form>
+    <div class="form__container">
+      <small-search-form
+        v-if="search"
+        class="align-content-center"
+        short
+      ></small-search-form>
+    </div>
+
     <v-spacer />
-    <v-btn filled rounded solo outlined plain raised text class="mr-md-2"
-      >Войти</v-btn
+    <v-btn
+      filled
+      solo
+      depressed
+      raised
+      outlined
+      class="mr-md-2 btn__header text-capitalize"
+      color="#00ACA2"
+      >Вход</v-btn
     >
-    <v-btn color="accent" outlined plain raised rounded text>Регистрация</v-btn>
+    <v-btn
+      class="btn__header text-capitalize"
+      color="#00ACA2"
+      filled
+      solo
+      depressed
+      raised
+      outlined
+      >Регистрация</v-btn
+    >
   </v-app-bar>
 </template>
 
 <script>
 import { mdiBiohazard } from '@mdi/js'
-import {mapGetters} from "vuex";
+import { mapGetters } from 'vuex'
 import SmallSearchForm from '../../components/forms/search/SmallSearchForm'
-import Registration from "../../components/cabinet/Registration";
-import SmsConfirm from "../../components/cabinet/SmsConfirm";
-import Login from "../../components/cabinet/Login";
-
 
 export default {
   name: 'BaseHeader',
-  components: { SmallSearchForm},
+  components: { SmallSearchForm },
   props: {
     search: {
       type: Boolean,
@@ -43,17 +76,12 @@ export default {
   data: () => ({
     logo: mdiBiohazard,
     title: 'Понаехали!',
+    drawer: false,
   }),
   computed: {
-    ...mapGetters({
-
-    }),
+    ...mapGetters({}),
   },
-  methods: {
-    toggleVisible(type, value) {
-
-    }
-  }
+  methods: {},
 }
 </script>
 

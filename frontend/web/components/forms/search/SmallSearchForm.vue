@@ -1,101 +1,108 @@
 <template>
-  <v-form ref="search" v-model="valid" lazy-validation @submit.prevent="submit">
-    <v-row>
-      <v-col cols="12" md="1"></v-col>
-      <v-col cols="12" md="3">
-        <v-tooltip slot="append" v-model="showCityHint" :top="!short" :bottom="short">
-          <template #activator="{}">
-            <city-select ref="citySelect" v-model="city" :dense="short" @input="onCityChange"></city-select>
-          </template>
-          <v-icon dense color="accent">mdi-home-search</v-icon>
-          <span> Выберите пункт назначения </span>
-        </v-tooltip>
+  <v-form
+    ref="search"
+    v-model="valid"
+    lazy-validation
+    @submit.prevent="submit"
+    class="small-search-form d-flex align-center"
+  >
+    <v-icon dense color="#00ACA2" class="ml-2">mdi-magnify</v-icon>
 
-      </v-col>
-      <v-col cols="12" md="3">
-        <v-menu
-          ref="menuDateFrom"
-          v-model="menuDateFrom"
-          :close-on-content-click="false"
-          transition="scale-transition"
-          offset-y
-          max-width="290px"
-          min-width="auto"
-        >
-          <template #activator="{ on, attrs }">
-            <v-text-field
-              v-model="dateFromFormatted"
-              label="Дата заезда"
-              :prepend-icon="short ? '' : 'mdi-calendar'"
-              v-bind="attrs"
-              filled
-              rounded
-              solo
-              :dense="short"
-              @blur="dateFrom = parseDate(dateFromFormatted)"
-              v-on="on"
-            ></v-text-field>
-          </template>
-          <v-date-picker
-            v-model="dateFrom"
-            solo
+    <v-row dense class="pa-0 ma-0">
+      <v-tooltip
+        slot="append"
+        v-model="showCityHint"
+        :top="!short"
+        :bottom="short"
+      >
+        <template #activator="{}">
+          <city-select
+            ref="citySelect"
+            v-model="city"
+            :dense="short"
+            @input="onCityChange"
+            :has-background="isPageSearch"
+            class="small-search-form__city"
+          ></city-select>
+        </template>
+        <v-icon dense color="accent">mdi-home-search</v-icon>
+        <span> Выберите пункт назначения </span>
+      </v-tooltip>
+      <v-divider
+        class="mx-3 pt-1 pb-1 small-search__divider"
+        inset
+        vertical
+      ></v-divider>
+      <v-menu
+        ref="menuDates"
+        v-model="menuDates"
+        :close-on-content-click="false"
+        transition="scale-transition"
+        offset-y
+        max-width="250px"
+        min-width="auto"
+      >
+        <template #activator="{ on, attrs }">
+          <v-text-field
+            v-model="formattedDate"
+            label="Даты"
+            :prepend-icon="short ? '' : 'mdi-calendar'"
+            v-bind="attrs"
             filled
+            :background-color="isPageSearch ? 'transparent' : ''"
+            hide-details
             rounded
-            no-title
-            @input="menuDateFrom = false"
-          ></v-date-picker>
-        </v-menu>
-      </v-col>
-      <v-col cols="12" md="3">
-        <v-menu
-          ref="menuDateTo"
-          v-model="menuDateTo"
-          :close-on-content-click="false"
-          transition="scale-transition"
-          offset-y
-          max-width="290px"
-          min-width="auto"
-        >
-          <template #activator="{ on, attrs }">
-            <v-text-field
-              v-model="dateToFormatted"
-              label="Дата выезда"
-              :prepend-icon="short ? '' : 'mdi-calendar'"
-              v-bind="attrs"
-              filled
-              rounded
-              solo
-              :dense="short"
-              @blur="dateTo = parseDate(dateToFormatted)"
-              v-on="on"
-            ></v-text-field>
-          </template>
-          <v-date-picker
-            v-model="dateTo"
-            no-title
-            @input="menuDateTo = false"
-          ></v-date-picker>
-        </v-menu>
-      </v-col>
+            solo
+            :dense="short"
+            v-on="on"
+            class="pa-0 ma-0 small-search-form__date"
+          ></v-text-field>
+        </template>
+        <v-date-picker v-model="dates" solo range filled rounded no-title>
+          <v-spacer></v-spacer>
+          <v-btn text color="primary" @click="menuDates = false">
+            Cancel
+          </v-btn>
+          <v-btn text color="primary" @click="menuDates = false"> OK </v-btn>
+        </v-date-picker>
+      </v-menu>
+      <v-divider
+        class="mx-3 pt-1 pb-1 small-search__divider"
+        inset
+        vertical
+      ></v-divider>
+      <v-select
+        v-model="currentVisitors"
+        :items="visitors"
+        :menu-props="{ maxHeight: '400' }"
+        hide-details
+        solo
+        rounded
+        filled
+        :background-color="isPageSearch ? 'transparent' : ''"
+        :dense="short"
+        label="Посетители"
+        item-text="title"
+        item-value="id"
+        class="small-search-form__visitors"
+      ></v-select>
+
       <v-col v-if="!short" cols="12" md="1">
         <v-btn color="accent" type="submit" dark fab>
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
       </v-col>
-      <v-col cols="12" md="1"></v-col>
     </v-row>
   </v-form>
 </template>
 
 <script>
-
-import { mapMutations } from "vuex";
-import CitySelect from "../../controls/selects/CitySelect";
-const DATE_FORMAT = 'D.MM.YYYY'
+import { mapMutations } from 'vuex'
+import CitySelect from '../../controls/selects/CitySelect'
 
 export default {
   name: 'SmallSearchForm',
-  components: {CitySelect},
+  components: { CitySelect },
 
   props: {
     short: {
@@ -106,60 +113,49 @@ export default {
   data: (vm) => ({
     valid: false,
 
-    dateFrom: null,
-    dateTo: null,
+    dates: [],
+    currentVisitors: null,
     city: vm.$route.params.city,
-
-    dateFromFormatted: !vm.dateFrom ? '' : vm.formatDate(vm.dateFrom),
-    dateToFormatted: !vm.dateTo ? '' : vm.formatDate(vm.dateTo),
-    menuDateFrom: false,
-    menuDateTo: false,
+    visitors: [{ id: '1', title: '3 гостя, 1 питомец' }],
+    menuDates: false,
 
     showCityHint: false,
   }),
   computed: {
-    computedDateFormatted() {
-      return this.formatDate(this.date)
+    isPageSearch() {
+      return this.$route.name === 'search-city'
+    },
+    formattedDate() {
+      return this.dates && this.dates[0] && this.dates[1]
+        ? `${this.$dayjs(this.dates[0]).format('DD.MM')} - ${this.$dayjs(
+            this.dates[1]
+          ).format('DD.MM')}`
+        : ''
     },
   },
 
-  watch: {
-    dateFrom(val) {
-      this.dateFromFormatted = this.formatDate(this.dateFrom)
-    },
-    dateTo(val) {
-      this.dateToFormatted = this.formatDate(this.dateTo)
-    },
-  },
+  watch: {},
 
   methods: {
     ...mapMutations({
-      'setCurrentCity' : 'web/geo/setCity'
+      setCurrentCity: 'web/geo/setCity',
     }),
-    onCityChange(value){
-      this.showCityHint = false;
-      this.setCurrentCity(value);
-      if(this.short){
-        this.submit();
+    onCityChange(value) {
+      this.showCityHint = false
+      this.setCurrentCity(value)
+      if (this.short) {
+        this.submit()
       }
     },
 
     submit() {
       if (!this.city) {
         this.showCityHint = true
-        this.$refs.citySelect.activateMenu();
+        this.$refs.citySelect.activateMenu()
         return
       }
       const url = `/search/${this.city}/`
       this.$router.push(url)
-    },
-    formatDate(date) {
-      if (!date) return null
-      return this.$dayjs(date).format(DATE_FORMAT)
-    },
-    parseDate(date) {
-      if (!date) return null
-      return this.$dayjs(date, DATE_FORMAT).format('YYYY-MM-DD')
     },
   },
 }

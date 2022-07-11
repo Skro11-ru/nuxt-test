@@ -1,8 +1,8 @@
 <template>
   <v-app light>
-    <base-header search />
-    <full-search-form></full-search-form>
-    <v-main app class="pa0">
+    <base-header class="search__header" search />
+    <full-search-form class="search__form"></full-search-form>
+    <v-main app class="search__main">
       <Nuxt />
     </v-main>
   </v-app>

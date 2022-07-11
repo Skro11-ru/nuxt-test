@@ -1,0 +1,61 @@
+.v-input__slot {
+  box-shadow: none !important;
+}
+
+.full-search {
+  &__select {
+    @media (max-width: $bp-md) {
+      display: none !important;
+    }
+
+    .v-input__control {
+      border-radius: 16px !important;
+    }
+  }
+  &__chips {
+    .v-chip.v-chip.v-chip--active {
+      border: 1px solid $primary !important;
+
+      &:before {
+        background-color: $primary;
+      }
+    }
+    .v-chip.v-chip {
+      border: none;
+      height: 48px;
+    }
+  }
+  &__chip {
+    @media (max-width: 1400px) {
+      display: none !important;
+    }
+  }
+  &__header {
+    @media (max-width: $bp-md) {
+      justify-content: center;
+    }
+  }
+  &__divider-chip {
+    @media (max-width: 1400px) {
+      display: none !important;
+    }
+  }
+}
+.chips__dialog {
+  border-radius: 16px !important;
+  height: 48px !important;
+  box-shadow: none !important;
+  @media (max-width: $bp-md) {
+    width: 90vw !important;
+  }
+  &__divider {
+    height: 28px !important;
+    margin: auto !important;
+    @media (max-width: $bp-md) {
+      display: none !important;
+    }
+  }
+  &_filters_selected {
+    background-color: transparentize($primary, 0.88) !important;
+  }
+}

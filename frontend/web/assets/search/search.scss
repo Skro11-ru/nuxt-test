@@ -1,0 +1,36 @@
+.list-cards {
+  background-color: #bdbdbd;
+}
+
+.search {
+  &__container {
+    height: calc(100vh - 64px);
+
+    .v-list-item {
+      &:not(:last-child) {
+        margin-bottom: 20px;
+      }
+    }
+  }
+  &__header {
+    height: 90px !important;
+  }
+  &__form {
+    margin-top: 90px !important;
+    height: 90px !important;
+  }
+  &__main {
+    padding-top: 180px !important;
+  }
+  &__container__row {
+    height: 100%;
+  }
+  &__container__row__map {
+    position: fixed;
+    right: 0;
+    height: 100%;
+    @media (max-width: $bp-md) {
+      display: none;
+    }
+  }
+}

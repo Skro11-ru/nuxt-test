@@ -1,0 +1,24 @@
+.form__container {
+  background-color: #fffbf9;
+  border-radius: 12px;
+}
+
+.btn__header {
+  border-radius: 16px !important;
+  @media (max-width: $bp-md) {
+    display: none !important;
+  }
+}
+
+.logo {
+  @media (max-width: $bp-sm) {
+    display: none !important;
+  }
+}
+
+.burger-btn {
+  display: none !important;
+  @media (max-width: $bp-sm) {
+    display: block !important;
+  }
+}

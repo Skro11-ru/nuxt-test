@@ -1,0 +1,9 @@
+/* A mixin that can be used to limit the number of lines of text .*/
+@mixin textEllipsis($count) {
+  word-break: break-word !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: $count !important;
+  -webkit-box-orient: vertical !important;
+}

@@ -2,19 +2,24 @@
   <v-app-bar
     fixed
     app
-    elevation="1"
-    class="mt-16 pt-4 align-center align-baseline d-flex align-content-center"
+    elevation="0"
+    class="align-center align-baseline d-flex align-content-center full-search__header"
   >
     <v-select
       v-model="filters.houseType"
       :items="houseTypes"
+      hide-details
+      dense
+      height="20px"
       multiple
       chips
+      solo
+      background-color="#FFFBF9"
       deletable-chips
       label="Тип жилья"
       item-text="title"
       item-value="id"
-      class="full_search__panel__select--house-types"
+      class="full-search__select mr-4"
     >
       <!--      <template v-slot:selection="{ item, index }">-->
       <!--        <v-chip v-if="index < 2">-->
@@ -28,18 +33,60 @@
       <!--        </span>-->
       <!--      </template>-->
     </v-select>
-    <v-chip-group v-model="filters.options" multiple class="ml-2 mb-4">
+    <v-select
+      v-model="filters.rentalType"
+      :items="rentalType"
+      hide-details
+      multiple
+      chips
+      solo
+      background-color="#FFFBF9"
+      deletable-chips
+      label="Тип аренды"
+      item-text="title"
+      item-value="id"
+      class="full-search__select mr-4"
+    ></v-select>
+
+    <v-select
+      v-model="filters.price"
+      :items="price"
+      hide-details
+      solo
+      background-color="#FFFBF9"
+      label="Цена"
+      item-text="title"
+      item-value="id"
+      class="full-search__select mr-4"
+    ></v-select>
+    <v-divider
+      class="mx-3 pt-1 pb-1 full-search__divider"
+      inset
+      vertical
+    ></v-divider>
+    <v-chip-group
+      v-model="filters.options"
+      multiple
+      class="ml-2 full-search__chips"
+    >
       <v-chip
+        class="full-search__chip"
+        id="full-search__chip"
         v-for="item in optionsList"
         v-show="item.primary"
         :key="item.id"
         filter
-        outlined
+        color="#FFFBF9"
+        filter-icon=""
         :value="item.id"
         >{{ item.title }}</v-chip
       >
     </v-chip-group>
-
+    <v-divider
+      class="mx-3 pt-1 pb-1 full-search__divider full-search__divider-chip"
+      inset
+      vertical
+    ></v-divider>
     <v-dialog
       v-model="advancedFiltersShow"
       persistent
@@ -48,23 +95,25 @@
     >
       <template #activator="{ on, attrs }">
         <v-btn
-          class="ma-2 mb-6"
-          small
-          outlined
-          rounded
-          color="secondary"
+          class="chips__dialog"
+          color="#FFFBF9"
+          :class="{ chips__dialog_filters_selected: filterCount }"
           v-bind="attrs"
           v-on="on"
         >
           <v-badge
             :content="filterCount"
             :value="filterCount"
-            color="primary"
+            color="#00ACA2"
             overlap
             offset-x="8"
             offset-y="5"
           >
-            <v-icon>mdi-format-list-bulleted-square</v-icon>
+            <div
+              class="d-flex align-center text-capitalize font-weight-regular full-search__all-filter"
+            >
+              Все фильтры <v-icon>mdi-dots-vertical</v-icon>
+            </div>
           </v-badge>
         </v-btn>
       </template>
@@ -190,15 +239,17 @@ export default {
         { id: '33', name: 'dom', title: 'Дом', icon: 'mdi-home-outline' },
         { id: '44', name: 'hostel', title: 'Хостел', icon: 'mdi-sofa-outline' },
       ],
+      rentalType: [],
+      price: [],
       optionsList: [
-        { id: '1', name: 'wifi', title: 'Wi-Fi', order: -1, primary: true },
-        { id: '9', name: 'kam', title: 'Камин', order: 0, primary: true },
+        { id: '1', name: 'wifi', title: 'Wi-Fi', order: -1, primary: false },
+        { id: '9', name: 'kam', title: 'Камин', order: 0, primary: false },
         {
           id: '2',
           name: 'cond',
           title: 'Кондиционер',
           order: 1,
-          primary: true,
+          primary: false,
         },
         {
           id: '3',
@@ -207,11 +258,39 @@ export default {
           order: 2,
           primary: false,
         },
-        { id: '4', name: 'utug', title: 'Утюг', order: 3, primary: true },
-        { id: '5', name: 'fen', title: 'Фен', order: 4, primary: true },
-        { id: '6', name: 'kuh', title: 'Кухня', order: 5, primary: true },
+        { id: '4', name: 'utug', title: 'Утюг', order: 3, primary: false },
+        { id: '5', name: 'fen', title: 'Фен', order: 4, primary: false },
+        { id: '6', name: 'kuh', title: 'Кухня', order: 5, primary: false },
         { id: '7', name: 'tele', title: 'Телевизор', order: 6, primary: false },
         { id: '8', name: 'dza', title: 'Джакузи', order: 7, primary: false },
+        {
+          id: '10',
+          name: 'freeCancellation',
+          title: 'Бесплатная отмена',
+          order: 8,
+          primary: true,
+        },
+        {
+          id: '11',
+          name: 'instantConfirmation',
+          title: 'Мгновенное подтверждение',
+          order: 9,
+          primary: true,
+        },
+        {
+          id: '12',
+          name: 'superhost',
+          title: 'Суперхозяин',
+          order: 10,
+          primary: true,
+        },
+        {
+          id: '13',
+          name: 'hotDeal',
+          title: 'Горящее предложение',
+          order: 11,
+          primary: true,
+        },
       ],
       rules: [
         {
@@ -247,6 +326,8 @@ export default {
         houseType: [],
         options: [],
         rules: [],
+        rentalType: [],
+        price: [],
       },
       advancedFiltersShow: false,
     }
@@ -265,14 +346,18 @@ export default {
 }
 </script>
 
-<style scoped>
-.full_search__panel__select--house-types {
-  max-width: 450px;
-  /*width: 25%;*/
+<style lang="scss" scoped>
+.full_search__panel__select {
+  border-radius: 16px;
+  box-shadow: none !important;
 }
 .advanced_filters__v-chip.advanced_filters__house_type {
   width: 150px;
   text-align: center;
   justify-content: center;
+}
+
+.v-overflow-btn .v-input__slot::before {
+  border-color: grey !important;
 }
 </style>

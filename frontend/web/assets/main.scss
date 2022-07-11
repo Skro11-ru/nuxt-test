@@ -1,5 +1,11 @@
-@import "@/assets/variables";
+@import '@/assets/variables';
+@import '@/assets/mixin/mixin';
 
-@import "@/assets/cabinet/layout";
-@import "@/assets/reset";
+@import '@/assets/cabinet/layout';
+@import '@/assets/search/objectCard';
+@import '@/assets/search/search.scss';
+@import '@/assets/search/fullSearchForm';
+@import '@/assets/search/smallSearchForm';
+@import '@/assets/search/baseHeader';
 
+@import '@/assets/reset';

@@ -1,46 +1,76 @@
 <template>
   <v-card
     v-if="orientation == 'horizontal'"
-    class="object-card object-card_orientation_horizontal rounded-lg elevation-1"
+    width="100%"
+    class="object-card object-card_orientation_horizontal rounded-lg elevation-1 w-100"
   >
-    <v-container>
+    <v-container class="w-100">
       <v-row>
-        <v-col class="pb-0" style="max-width: 270px">
+        <v-col cols="6" md="6" xl="5" class="pb-0 pa-0">
           <v-img
-            min-width="224px"
-            max-width="260px"
+            height="100%"
             lazy-src="/1.jpg"
             src="/1.jpg"
-            class="rounded-lg"
+            class="rounded-lg rounded-r-0"
+            width="100%"
           ></v-img>
         </v-col>
-        <v-col class="pb-0 d-flex align-end flex-column">
-          <v-card-subtitle
-            class="align-self-start text--secondary text-caption text-uppercase pa-0"
-            >{{ value.type.title }}</v-card-subtitle
-          >
+        <v-col cols="6" md="6" xl="7" class="pb-0 d-flex align-end flex-column">
+          <v-container class="d-flex pa-0 mb-2">
+            <v-card-subtitle
+              class="align-self-center text--secondary text-xs-body-2 text-xl-caption text-capitalize pa-0"
+            >
+              <div
+                class="text-xs-body-2 text-xl-caption mt-auto mb-auto align-content-center"
+              >
+                {{ value.type.title }}
+              </div>
+            </v-card-subtitle>
+            <v-btn
+              plain
+              class="ml-auto pa-0 justify-end"
+              @click="like"
+              height="20"
+            >
+              <v-icon
+                v-if="!value.liked"
+                class="text-right pa-0"
+                color="#37373A"
+                dense
+              >
+                mdi-heart-outline
+              </v-icon>
+              <v-icon
+                v-else
+                class="text-right ml-auto pa-0"
+                color="#37373A"
+                large
+              >
+                mdi-heart
+              </v-icon>
+            </v-btn>
+          </v-container>
+
           <v-card-title
-            class="align-self-start text-h6 pt-0 pb-5 pl-0 text-break"
+            class="text-subtitle-2 text-xl-subtitle-1 align-self-start font-weight-medium pa-0 mb-2 pl-0 text-break object-card__title"
             style="line-height: 1.3rem"
           >
             {{ value.title }}
           </v-card-title>
-          <v-card-text class="mt-1 grow">
+          <v-card-text class="mt-1 grow object-card__params">
             <v-row>
               <span class="mr-4">
-                <v-icon color="primary">mdi-account-supervisor-outline</v-icon>
-                До {{ maxGuests | word_case(['гостя', 'гостей', 'гостей']) }}
+                {{ maxGuests | word_case(['гостя', 'гостей', 'гостей']) }}
               </span>
               <span class="mr-4">
-                <v-icon color="accent">mdi-door-open</v-icon>
-                {{ rooms | word_case(['комната', 'комнаты', 'комнат']) }}
+                {{ beds | word_case(['кровать', 'кровати', 'кроватей']) }}
               </span>
               <span class="mr-4">
-                <v-icon>mdi-hammer-sickle</v-icon>
-                {{ square }} м<sup>2</sup>
+                {{ rooms | word_case(['спальня', 'спальни', 'спальней']) }}
               </span>
+              <span class="mr-4"> {{ square }} м<sup>2</sup> </span>
             </v-row>
-            <v-row class="mt-5">
+            <v-row class="mt-3">
               <v-chip
                 v-for="item in value.options"
                 v-show="item.primary"
@@ -54,10 +84,28 @@
                 {{ item.title }}
               </v-chip>
             </v-row>
+            <v-row class="object-card__circumstances">
+              <v-list dense class="pa-0">
+                <v-list-item
+                  v-for="item in value.circumstances"
+                  :key="item.id"
+                  class="pa-0 ma-0 list-item"
+                >
+                  <v-icon color="#00ACA2" small> mdi-circle-small </v-icon>
+                  <v-list-item-content class="pa-0">
+                    <v-list-item-title
+                      class="font-weight-medium list-item__title"
+                    >
+                      {{ item.title }}</v-list-item-title
+                    >
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+            </v-row>
           </v-card-text>
           <v-spacer></v-spacer>
           <v-card-actions
-            class="object-card__card-actions object-card__card-actions_orientation_horizontal pb-0 mt-auto d-flex w-100"
+            class="object-card__card-actions object-card__card-actions_orientation_horizontal pa-0 mb-1 mt-auto d-flex"
           >
             <v-flex class="d-inline-flex align-center">
               <v-rating
@@ -66,14 +114,15 @@
                 dense
                 half-increments
                 readonly
-                size="14"
+                length="1"
+                size="28"
               ></v-rating>
-              <div class="grey--text text-caption">
+              <div class="text-caption">
                 {{ value.rating.value }} ({{ value.reviews.count }})
               </div>
             </v-flex>
-            <v-flex class="text--darken-2 text--secondary text-h6 text-right">
-              <span>{{ value.price | currency }}</span>
+            <v-flex class="text-subtitle-2 text-right">
+              <span> от {{ value.price | currency }} / ночь</span>
             </v-flex>
           </v-card-actions>
         </v-col>
@@ -93,7 +142,7 @@
         contain
         lazy-src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
         src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
-        class="'object-card__image"
+        class="object-card__image"
         :class="{ 'object-card__image_is-map': map }"
       >
       </v-img>
@@ -163,6 +212,12 @@ export default {
             title: 'Максимальное количество гостей',
             value: '5',
           },
+          {
+            id: '4',
+            name: 'beds',
+            title: 'Количество кроватей',
+            value: '2',
+          },
         ],
         options: [
           {
@@ -198,6 +253,11 @@ export default {
             icon: 'mdi-toilet',
           },
         ],
+        circumstances: [
+          { id: 1, title: 'Несколько вариантов питания' },
+          { id: 2, title: 'Горящее предложение' },
+          { id: 3, title: 'Предоплата' },
+        ],
         rating: {
           value: 3.5,
           detail: {},
@@ -206,6 +266,7 @@ export default {
           count: 0,
           list: [],
         },
+        liked: false,
       }),
     },
     map: {
@@ -230,11 +291,18 @@ export default {
     rooms() {
       return this.params.get('rooms').value
     },
+    beds() {
+      return this.params.get('beds').value
+    },
     maxGuests() {
       return this.params.get('max_guests').value
     },
   },
-  methods: {},
+  methods: {
+    like() {
+      console.log('like')
+    },
+  },
 }
 </script>
 
